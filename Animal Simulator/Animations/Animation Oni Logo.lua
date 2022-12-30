@@ -1,5 +1,5 @@
 
-local BlackSquareOni = {
+Animate = {
     [1] = {[[
         　　　　　　　　　🖤🖤🖤🖤🖤🖤🖤　　　　　　🖤🖤　　　　　　　　　　　🖤　　　　🖤🖤🖤　　　　　　　
         　　　　　　　　🖤🖤🖤🖤🖤🖤🖤🖤🖤　　　　　🖤🖤🖤　　　　　　　　　🖤🖤　　　　🖤🖤🖤　　　　　　　
