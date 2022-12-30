@@ -1,3 +1,5 @@
+---WAITS UNTIL CHARACTER AND GAME IS FULLY LOADED
+
 repeat wait() until game:IsLoaded()
 
 
@@ -46,6 +48,9 @@ end
 Access = true
 VIP = true
 
+
+
+---SYSTEM TO SEE WHEN A PLAYER IS DEAD OR ALIVE [[START]]
 function RemoveGUI()
     local success, error = pcall(function()
         if game.Players.LocalPlayer.PlayerGui:FindFirstChild("newRewardGui") then
@@ -98,12 +103,7 @@ game.Players.LocalPlayer.CharacterAdded:Connect(function(newCharacter)
     end)
 end)
 
-
-
-
-
-
--- [[ Whitelist Groups ]] --
+---SYSTEM TO SEE WHEN A PLAYER IS DEAD OR ALIVE [[END]]
 
 -- [[ Comma Function ]]
 function commaValue(amount)
@@ -127,16 +127,19 @@ local Timestamp = os.date("%Y-%m-%dT%X.000Z")
 local Request = http_request or request or HttpPost or syn.request
 
 
-if Access == false then
-    return
-end
 
+
+---- KEEP TRACK OF PLAYER'S PING
 local fps = 0
 local PlayerPing = 0
 game:GetService("RunService").RenderStepped:Connect(function(ping)
     PlayerPing = (game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString(math.round(2/ping))) -- your ping
     fps = math.round(1/ping)
 end)
+
+
+
+---- SEND PLAYER'S CURRENT LEVELING DAYA TO THE WEBHOOK
 
 local fireballsTotal = 0
 
@@ -147,7 +150,7 @@ local LostExpPerMin = 0
 local xseconds = 0
 local xmins = 0
 
-if getgenv().LocalWebhookId == '' then
+if getgenv().LocalWebhookId == 'YOUR DISCORD WEBHOOK HERE' or getgenv().LocalWebhookId == '' or getgenv().LocalWebhookId == nil then
     return
 else
     local TrackingWebhookSeconds = 0
@@ -287,7 +290,9 @@ else
                         },
                     }
                 }
-                Request({Url = getgenv().LocalWebhookId, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = game.HttpService:JSONEncode(msg)})
+                pcall(function()
+                    Request({Url = getgenv().LocalWebhookId, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = game.HttpService:JSONEncode(msg)})
+                end)
                 --print("Sending Request")
 
 
@@ -354,8 +359,8 @@ disable()
 
 
 
---- [ XEN STUFF]
 
+---- KEEPS TRACK OF ALL THE EXP GAINED FROM THE USE OF THE CHANGED SIGNAL. THIS IS USED TO PREDICT WHAT LEVEL YOU WILL BE BASED ON THE GIVEN EXP PER MIN
 
 
 local tickstart = os.clock()
@@ -489,6 +494,21 @@ task.spawn(function()
         --print(xmins)
     end
 end)
+
+
+
+
+
+
+----END TRACKER
+
+
+
+
+
+
+
+
 
 -- [[ UI Library Setup ]]
 Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/VoixGIT/ONIHUB/main/VisualUI3.0'))()
@@ -772,7 +792,7 @@ end)
 
 
 local savedpos
-Toggle = Section:CreateToggle('(Coins [Gain and Remove All - [MultiToggle]])', false, Color3.fromRGB(0, 125, 255), 0.25, function(Value)
+Toggle = Section:CreateToggle('(Coins [Gain - [MultiToggle]])', false, Color3.fromRGB(0, 125, 255), 0.25, function(Value)
     if Value == true then
         Coins = true
     else
@@ -790,7 +810,6 @@ Toggle = Section:CreateToggle('(Coins [Gain and Remove All - [MultiToggle]])', f
 end)
 
 -- [[ XEN SETTINGS ]]
-
 
 
 TabAutoRest = Window:CreateTab('Name Features', false, 'rbxassetid://3926305904', Vector2.new(524, 44), Vector2.new(36, 36))
@@ -1968,10 +1987,6 @@ Section = TabMisc:CreateSection('Pack Settings')
 
 Button = Section:CreateButton('Create UK Pack', function()
     game:GetService("Players").LocalPlayer.PlayerGui.TeamGUI.createFrame.bodyFrame.createButton.createTeamEvent:FireServer('🇬🇧')
-end)
-
-Button = Section:CreateButton('Create AN Pack', function()
-    game:GetService("Players").LocalPlayer.PlayerGui.TeamGUI.createFrame.bodyFrame.createButton.createTeamEvent:FireServer('-😈A N😈-')
 end)
 
 Button = Section:CreateButton('Create ONI Pack', function()
