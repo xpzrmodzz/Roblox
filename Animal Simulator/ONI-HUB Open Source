@@ -150,181 +150,181 @@ local LostExpPerMin = 0
 local xseconds = 0
 local xmins = 0
 
-    if getgenv().LocalWebhookId ~= 'YOUR DISCORD WEBHOOK HERE' then
-        local TrackingWebhookSeconds = 0
-        local TrackingWebhookMinutes = 0
-        local TrackedTime = 0
-        local TrackedPlayerLevel = game.Players.LocalPlayer.leaderstats.Level.Value
-        local LevelPerMin = 0
-        local HoursTilOnLeaderboard = 0
-        local leveldiff = 0
+if getgenv().LocalWebhookId ~= 'YOUR DISCORD WEBHOOK HERE' then
+    local TrackingWebhookSeconds = 0
+    local TrackingWebhookMinutes = 0
+    local TrackedTime = 0
+    local TrackedPlayerLevel = game.Players.LocalPlayer.leaderstats.Level.Value
+    local LevelPerMin = 0
+    local HoursTilOnLeaderboard = 0
+    local leveldiff = 0
 
-        local testSeconds = 0
-        local testMins = 0
-        local testHours = 0
+    local testSeconds = 0
+    local testMins = 0
+    local testHours = 0
 
-        local function TotalExp(exp)
-            return 500*(exp-1)^2+1500*(exp-1)+1000
-        end
-
-
-        local top100level = 135000
-        for i,v in pairs(game:GetService("Workspace").LBFolder.GlobalLeaderboard.LeaderboardGUI.Holder.ScrollingFrame:GetChildren()) do
-            if v.Name == "LeaderboardFrame" then
-                local rank = tonumber(v.Rank.text)
-                local player = v.Player.text
-                local level = tonumber(v.Level.text)
-
-                if rank == 100 then
-                    top100level = level
-                end
-            end
-        end
-
-
-        local top1level = 165000
-        for i,v in pairs(game:GetService("Workspace").LBFolder.GlobalLeaderboard.LeaderboardGUI.Holder.ScrollingFrame:GetChildren()) do
-            if v.Name == "LeaderboardFrame" then
-                local rank = tonumber(v.Rank.text)
-                local player = v.Player.text
-                local level = tonumber(v.Level.text)
-
-                if rank == 1 then
-                    top1level = level
-                end
-            end
-        end
-
-        task.spawn(function()
-            while true do
-
-                if testMins ~= 0 and game.Players.LocalPlayer.leaderstats.Level.Value-TrackedPlayerLevel ~= 0 then
-                    LevelPerMin = (game.Players.LocalPlayer.leaderstats.Level.Value-TrackedPlayerLevel)/testMins
-                end
-
-                local expdifftomax100 = TotalExp(top100level) - TotalExp(game.Players.LocalPlayer.leaderstats.Level.Value)
-                local expdifftomax1 = TotalExp(top1level) - TotalExp(game.Players.LocalPlayer.leaderstats.Level.Value)
-                local TotalExpPerHour = TotalExpPerMin*60
-
-                HoursTilOnLeaderboard100 = expdifftomax100/TotalExpPerHour
-                HoursTilOnLeaderboard1 = expdifftomax1/TotalExpPerHour
-
-                if TrackingWebhookSeconds == 0 then
-                    local msg = {
-                        ["username"] = BotUserName,
-                        ["avatar_url"] = BotPhotoURL,
-                        ["content"] = " ",
-                        ["embeds"] = {
-                            {
-                                ["title"] = "__**Farming Update**__",
-                                ["type"] = "rich",
-                                ["description"] = Player.Name,
-                                ["color"] = Green,
-                                ["fields"] = {
-                                    {
-                                        ["name"] = "Current Level",
-                                        ["value"] = commaValue(game.Players.LocalPlayer.leaderstats.Level.Value),
-                                        ["inline"] = true
-                                    },
-                                    {
-                                        ["name"] = "Previous Level",
-                                        ["value"] = commaValue(TrackedPlayerLevel),
-                                        ["inline"] = true
-                                    },
-                                    {
-                                        ["name"] = "​",
-                                        ["value"] = "Data:",
-                                    },
-                                    {
-                                        ["name"] = "Levels Gained",
-                                        ["value"] = commaValue(game.Players.LocalPlayer.leaderstats.Level.Value-TrackedPlayerLevel),
-                                        ["inline"] = true
-                                    },
-                                    {
-                                        ["name"] = "Levels Per Min",
-                                        ["value"] = tostring(math.round(LevelPerMin*100)/100),
-                                        ["inline"] = true
-                                    },
-                                    {
-                                        ["name"] = "Levels Per Hour",
-                                        ["value"] = tostring(math.round((LevelPerMin*60)*100)/100),
-                                        ["inline"] = true
-                                    },
-                                    {
-                                        ["name"] = "Exp Gained Per Min",
-                                        ["value"] = commaValue(TotalExpPerMin),
-                                        ["inline"] = false
-                                    },
-                                    {
-                                        ["name"] = "Exp till #100",
-                                        ["value"] = commaValue(expdifftomax100),
-                                        ["inline"] = false
-                                    },
-                                    {
-                                        ["name"] = "Hours till #100",
-                                        ["value"] = tostring(math.round(HoursTilOnLeaderboard100*100)/100),
-                                        ["inline"] = true
-                                    },
-                                    {
-                                        ["name"] = "Exp till #1",
-                                        ["value"] = commaValue(expdifftomax1),
-                                        ["inline"] = false
-                                    },
-                                    {
-                                        ["name"] = "Hours till #1",
-                                        ["value"] = tostring(math.round(HoursTilOnLeaderboard1*100)/100),
-                                        ["inline"] = true
-                                    },
-                                    {
-                                        ["name"] = "Fireballs",
-                                        ["value"] = fireballsTotal,
-                                        ["inline"] = true
-                                    },
-                                },
-                                ['timestamp'] = Timestamp,
-                                ["footer"] = {
-                                    ["text"]  = "Time Farming: ".. TrackedTime.. "\n" .. "FPS: "..fps.."\n" .. "Ping: ".. PlayerPing .. "\n" .."​"
-                                }
-                            },
-                        }
-                    }
-                    pcall(function()
-                        Request({Url = getgenv().LocalWebhookId, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = game.HttpService:JSONEncode(msg)})
-                    end)
-                    --print("Sending Request")
-
-
-                    xseconds = 0
-                    xmins = 0
-                    TotalExpPerMin = 0
-                    LostExpPerMin = 0
-                    levelaverage = 0
-                end
-
-
-                testSeconds += 1
-                testMins = testSeconds / 60
-                testHours = testMins / 60
-
-                --print("SECONDS: ",TrackingWebhookSeconds)
-
-                TrackingWebhookSeconds = TrackingWebhookSeconds + 1
-                if TrackingWebhookSeconds >= 300 then
-                    TrackingWebhookMinutes = (TrackingWebhookSeconds + (TrackingWebhookMinutes * 60)) / 60
-                    TrackedTime = math.floor(TrackingWebhookMinutes) .. ' Minutes'
-
-                    if TrackingWebhookMinutes >= 60 then
-                        TrackingWebhookHours = TrackingWebhookMinutes / 60
-                        TrackingWebhookLeftoverMinutes = (TrackingWebhookHours%1) * 60
-                        TrackingWebhookHours = math.floor(TrackingWebhookHours)
-                        TrackedTime = TrackingWebhookHours .. ' Hours ' .. math.floor(TrackingWebhookLeftoverMinutes) .. ' Minutes'
-                    end
-                    TrackingWebhookSeconds = 0
-                end
-                wait(1)
-            end
-        end)
+    local function TotalExp(exp)
+        return 500*(exp-1)^2+1500*(exp-1)+1000
     end
+
+
+    local top100level = 135000
+    for i,v in pairs(game:GetService("Workspace").LBFolder.GlobalLeaderboard.LeaderboardGUI.Holder.ScrollingFrame:GetChildren()) do
+        if v.Name == "LeaderboardFrame" then
+            local rank = tonumber(v.Rank.text)
+            local player = v.Player.text
+            local level = tonumber(v.Level.text)
+
+            if rank == 100 then
+                top100level = level
+            end
+        end
+    end
+
+
+    local top1level = 165000
+    for i,v in pairs(game:GetService("Workspace").LBFolder.GlobalLeaderboard.LeaderboardGUI.Holder.ScrollingFrame:GetChildren()) do
+        if v.Name == "LeaderboardFrame" then
+            local rank = tonumber(v.Rank.text)
+            local player = v.Player.text
+            local level = tonumber(v.Level.text)
+
+            if rank == 1 then
+                top1level = level
+            end
+        end
+    end
+
+    task.spawn(function()
+        while true do
+
+            if testMins ~= 0 and game.Players.LocalPlayer.leaderstats.Level.Value-TrackedPlayerLevel ~= 0 then
+                LevelPerMin = (game.Players.LocalPlayer.leaderstats.Level.Value-TrackedPlayerLevel)/testMins
+            end
+
+            local expdifftomax100 = TotalExp(top100level) - TotalExp(game.Players.LocalPlayer.leaderstats.Level.Value)
+            local expdifftomax1 = TotalExp(top1level) - TotalExp(game.Players.LocalPlayer.leaderstats.Level.Value)
+            local TotalExpPerHour = TotalExpPerMin*60
+
+            HoursTilOnLeaderboard100 = expdifftomax100/TotalExpPerHour
+            HoursTilOnLeaderboard1 = expdifftomax1/TotalExpPerHour
+
+            if TrackingWebhookSeconds == 0 then
+                local msg = {
+                    ["username"] = BotUserName,
+                    ["avatar_url"] = BotPhotoURL,
+                    ["content"] = " ",
+                    ["embeds"] = {
+                        {
+                            ["title"] = "__**Farming Update**__",
+                            ["type"] = "rich",
+                            ["description"] = Player.Name,
+                            ["color"] = Green,
+                            ["fields"] = {
+                                {
+                                    ["name"] = "Current Level",
+                                    ["value"] = commaValue(game.Players.LocalPlayer.leaderstats.Level.Value),
+                                    ["inline"] = true
+                                },
+                                {
+                                    ["name"] = "Previous Level",
+                                    ["value"] = commaValue(TrackedPlayerLevel),
+                                    ["inline"] = true
+                                },
+                                {
+                                    ["name"] = "​",
+                                    ["value"] = "Data:",
+                                },
+                                {
+                                    ["name"] = "Levels Gained",
+                                    ["value"] = commaValue(game.Players.LocalPlayer.leaderstats.Level.Value-TrackedPlayerLevel),
+                                    ["inline"] = true
+                                },
+                                {
+                                    ["name"] = "Levels Per Min",
+                                    ["value"] = tostring(math.round(LevelPerMin*100)/100),
+                                    ["inline"] = true
+                                },
+                                {
+                                    ["name"] = "Levels Per Hour",
+                                    ["value"] = tostring(math.round((LevelPerMin*60)*100)/100),
+                                    ["inline"] = true
+                                },
+                                {
+                                    ["name"] = "Exp Gained Per Min",
+                                    ["value"] = commaValue(TotalExpPerMin),
+                                    ["inline"] = false
+                                },
+                                {
+                                    ["name"] = "Exp till #100",
+                                    ["value"] = commaValue(expdifftomax100),
+                                    ["inline"] = false
+                                },
+                                {
+                                    ["name"] = "Hours till #100",
+                                    ["value"] = tostring(math.round(HoursTilOnLeaderboard100*100)/100),
+                                    ["inline"] = true
+                                },
+                                {
+                                    ["name"] = "Exp till #1",
+                                    ["value"] = commaValue(expdifftomax1),
+                                    ["inline"] = false
+                                },
+                                {
+                                    ["name"] = "Hours till #1",
+                                    ["value"] = tostring(math.round(HoursTilOnLeaderboard1*100)/100),
+                                    ["inline"] = true
+                                },
+                                {
+                                    ["name"] = "Fireballs",
+                                    ["value"] = fireballsTotal,
+                                    ["inline"] = true
+                                },
+                            },
+                            ['timestamp'] = Timestamp,
+                            ["footer"] = {
+                                ["text"]  = "Time Farming: ".. TrackedTime.. "\n" .. "FPS: "..fps.."\n" .. "Ping: ".. PlayerPing .. "\n" .."​"
+                            }
+                        },
+                    }
+                }
+                pcall(function()
+                    Request({Url = getgenv().LocalWebhookId, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = game.HttpService:JSONEncode(msg)})
+                end)
+                --print("Sending Request")
+
+
+                xseconds = 0
+                xmins = 0
+                TotalExpPerMin = 0
+                LostExpPerMin = 0
+                levelaverage = 0
+            end
+
+
+            testSeconds += 1
+            testMins = testSeconds / 60
+            testHours = testMins / 60
+
+            --print("SECONDS: ",TrackingWebhookSeconds)
+
+            TrackingWebhookSeconds = TrackingWebhookSeconds + 1
+            if TrackingWebhookSeconds >= 300 then
+                TrackingWebhookMinutes = (TrackingWebhookSeconds + (TrackingWebhookMinutes * 60)) / 60
+                TrackedTime = math.floor(TrackingWebhookMinutes) .. ' Minutes'
+
+                if TrackingWebhookMinutes >= 60 then
+                    TrackingWebhookHours = TrackingWebhookMinutes / 60
+                    TrackingWebhookLeftoverMinutes = (TrackingWebhookHours%1) * 60
+                    TrackingWebhookHours = math.floor(TrackingWebhookHours)
+                    TrackedTime = TrackingWebhookHours .. ' Hours ' .. math.floor(TrackingWebhookLeftoverMinutes) .. ' Minutes'
+                end
+                TrackingWebhookSeconds = 0
+            end
+            wait(1)
+        end
+    end)
+end
 
 -- [[ Anti AFK ]]
 if not game:IsLoaded() then game.Loaded:Wait(); end
