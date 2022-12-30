@@ -1680,7 +1680,7 @@ if VIP then
 
 
     local Whitelist = {}
-    local Toggle = Section:CreateToggle('Kill Aura [ALL]', false, Color3.fromRGB(0, 125, 255), 0.25, function(Value)
+    local Toggle = Section:CreateToggle('Kill Aura Invisible [ALL]', false, Color3.fromRGB(0, 125, 255), 0.25, function(Value)
         if Value == true then
             KillAura = true
         else
@@ -1762,7 +1762,7 @@ if VIP then
         PlayerKill = Value
     end)
 
-    local Toggle = Section:CreateToggle('Kill Aura [SINGLE]', false, Color3.fromRGB(0, 125, 255), 0.25, function(Value)
+    local Toggle = Section:CreateToggle('Kill Aura Invisible [SINGLE]', false, Color3.fromRGB(0, 125, 255), 0.25, function(Value)
         if Value == true then
             SingleKillAura = true
         else
