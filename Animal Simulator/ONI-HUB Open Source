@@ -150,10 +150,7 @@ local LostExpPerMin = 0
 local xseconds = 0
 local xmins = 0
 
-task.spawn(function()
-    if getgenv().LocalWebhookId == 'YOUR DISCORD WEBHOOK HERE' or getgenv().LocalWebhookId == '' or getgenv().LocalWebhookId == nil then
-        return
-    else
+    if getgenv().LocalWebhookId ~= 'YOUR DISCORD WEBHOOK HERE' then
         local TrackingWebhookSeconds = 0
         local TrackingWebhookMinutes = 0
         local TrackedTime = 0
@@ -328,7 +325,6 @@ task.spawn(function()
             end
         end)
     end
-end)
 
 -- [[ Anti AFK ]]
 if not game:IsLoaded() then game.Loaded:Wait(); end
