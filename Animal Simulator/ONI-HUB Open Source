@@ -558,7 +558,8 @@ Toggle = Section:CreateToggle('[Dummy] (Hit)', false, Color3.fromRGB(0, 125, 255
             local dummyLevel
             if game.Players.LocalPlayer.leaderstats.Level.Value > 5000 then
                 dummyLevel = "Dummy2"
-                search = game:GetService("Workspace").MAP.waterfall1
+                dummyName = "5k_dummies"
+                search = game:GetService("Workspace").MAP[dummyName]
             else
                 dummyLevel = "Training Dummy"
                 search = game:GetService("Workspace").MAP.dummies
@@ -622,7 +623,8 @@ Toggle = Section:CreateToggle('[Dummy] (Single Fireball + Hit)', false, Color3.f
             local dummyLevel
             if game.Players.LocalPlayer.leaderstats.Level.Value > 5000 then
                 dummyLevel = "Dummy2"
-                search = game:GetService("Workspace").MAP.waterfall1
+                dummyName = "5k_dummies"
+                search = game:GetService("Workspace").MAP[dummyName]
             else
                 dummyLevel = "Training Dummy"
                 search = game:GetService("Workspace").MAP.dummies
@@ -702,7 +704,8 @@ Toggle = Section:CreateToggle('[Dummy] (All Fireballs + Hit - [MultiToggle])', f
             local dummyLevel
             if game.Players.LocalPlayer.leaderstats.Level.Value > 5000 then
                 dummyLevel = "Dummy2"
-                search = game:GetService("Workspace").MAP.waterfall1
+                dummyName = "5k_dummies"
+                search = game:GetService("Workspace").MAP[dummyName]
             else
                 dummyLevel = "Training Dummy"
                 search = game:GetService("Workspace").MAP.dummies
@@ -1875,7 +1878,7 @@ Button = Section:CreateButton('Delete Map v2', function()
         local SpawnList = game:GetService("Workspace"):FindFirstChild("SpawnPoints")
         local SpawnLocation = game:GetService("Workspace"):FindFirstChild("SpawnLocation")
         local Dummy0kList = game:GetService("Workspace"):FindFirstChild("MAP"):FindFirstChild("dummies")
-        local Dummy5kList = game:GetService("Workspace"):FindFirstChild("MAP"):FindFirstChild("waterfall1")
+        local Dummy5kList = game:GetService("Workspace"):FindFirstChild("MAP"):FindFirstChild("5k_dummies")
 
         local addTable = {SpawnList, Dummy0kList, Dummy5kList}
 
